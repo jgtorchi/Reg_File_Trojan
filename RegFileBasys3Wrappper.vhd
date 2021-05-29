@@ -20,7 +20,7 @@ entity RegFileBasys3Wrappper is
            BTNC     : in std_logic;
            BTNU     : in std_logic;
            BTND     : in std_logic;
-           SWITCHES : in std_logic_vector(15 downto 0);
+           SWITCHE  : in std_logic_vector(15 downto 0);
            LEDS     : out std_logic_vector(15 downto 0);
            DISP_EN  : out std_logic_vector(3 downto 0);
            SEGMENTS : out std_logic_vector(6 downto 0));
@@ -43,19 +43,20 @@ architecture Behavioral of RegFileBasys3Wrappper is
               RF_RS1, RF_RS2          : out std_logic_vector(15 downto 0));
     end component;    
     
-    signal RF_ADR1 : std_logic_vector(3  downto 0);
-    signal RF_ADR2 : std_logic_vector(3  downto 0);
-    signal RF_WA   : std_logic_vector(3  downto 0);
-    signal RF_WD   : std_logic_vector(15 downto 0);
-    signal U_ID    : std_logic_vector(15 downto 0);
-    signal COUNT   : std_logic_vector(15 downto 0);
+    signal RF_ADR1  : std_logic_vector(3  downto 0);
+    signal RF_ADR2  : std_logic_vector(3  downto 0);
+    signal RF_WA    : std_logic_vector(3  downto 0);
+    signal RF_WD    : std_logic_vector(15 downto 0);
+    signal U_ID     : std_logic_vector(15 downto 0);
+    signal COUNT    : std_logic_vector(15 downto 0);
+    signal SWITCHES : std_logic_vector(15 downto 0);
     
     TYPE STATE_TYPE IS (enterAdr,enterData,enterKey);
     SIGNAL state   : STATE_TYPE := enterAdr;
 
 begin
 
-    selectMode : Process(CLK,BTNC,BTNL,BTNR)
+    selectState : Process(CLK,BTNC,BTNL,BTNR)
     begin
         if rising_edge(clk) then
             if(BTNC='1')then
@@ -79,11 +80,12 @@ begin
                 elsif (state=enterData) then
                     RF_WD   <= SWITCHES;
                 elsif (state=enterKey) then
-                    RF_WD   <= U_ID;
+                    U_ID   <= SWITCHES;
                 end if;
             end if;
         end if;
     end process;
+    
 
     myReg: reg_file 
         Port Map(
@@ -104,5 +106,6 @@ begin
             VALID    => '1',
             DISP_EN  => DISP_EN,
             SEGMENTS => SEGMENTS);
-
+            SWITCHES <= SWITCHE when (BTNR='0') else x"001F";
+    
 end Behavioral;
