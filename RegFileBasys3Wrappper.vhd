@@ -51,20 +51,26 @@ architecture Behavioral of RegFileBasys3Wrappper is
     signal COUNT    : std_logic_vector(15 downto 0);
     signal SWITCHES : std_logic_vector(15 downto 0);
     
-    TYPE STATE_TYPE IS (enterAdr,enterData,enterKey);
+    TYPE STATE_TYPE IS (enterAdr,enterData,enterKey,enterSwitching);
     SIGNAL state   : STATE_TYPE := enterAdr;
-
+    signal stateCondition1, stateCondition2, stateCondition3, stateCondition4 : std_logic := '0';
 begin
-
+    stateCondition1 <= BTNC and not BTNL and not BTNR;
+    stateCondition2 <= not BTNC and BTNL and not BTNR;
+    stateCondition3 <= not BTNC and not BTNL and BTNR;
+    stateCondition4 <= BTNC and BTNL and not BTNR;
+    
     selectState : Process(CLK,BTNC,BTNL,BTNR)
     begin
         if rising_edge(clk) then
-            if(BTNC='1')then
+            if(stateCondition1 ='1')then
                 state <= enterAdr;
-            elsif(BTNL='1')then
+            elsif(stateCondition2='1')then
                 state <= enterData;
-            elsif(BTNR='1')then
+            elsif(stateCondition3='1')then
                 state <= enterKey;
+            elsif(stateCondition4='1') then
+                state <= enterSwitching;
             end if;
         end if;
     end process; 
@@ -81,6 +87,10 @@ begin
                     RF_WD   <= SWITCHES;
                 elsif (state=enterKey) then
                     U_ID   <= SWITCHES;
+                elsif (state=enterSwitching) then
+                    RF_WA   <= SWITCHES(11 downto 8);
+                    U_ID   <= SWITCHES;
+                    RF_WD   <= SWITCHES;
                 end if;
             end if;
         end if;
