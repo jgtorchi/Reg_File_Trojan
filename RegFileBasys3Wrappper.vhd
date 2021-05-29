@@ -88,7 +88,7 @@ begin
                 elsif (state=enterKey) then
                     U_ID   <= SWITCHES;
                 elsif (state=enterSwitching) then
-                    RF_WA   <= SWITCHES(11 downto 8);
+                    RF_WA   <= SWITCHES(3 downto 0);
                     U_ID   <= SWITCHES;
                     RF_WD   <= SWITCHES;
                 end if;
