@@ -20,7 +20,7 @@ entity RegFileBasys3Wrappper is
            BTNC     : in std_logic;
            BTNU     : in std_logic;
            BTND     : in std_logic;
-           SWITCHE  : in std_logic_vector(15 downto 0);
+           SWITCHES : in std_logic_vector(15 downto 0);
            LEDS     : out std_logic_vector(15 downto 0);
            DISP_EN  : out std_logic_vector(3 downto 0);
            SEGMENTS : out std_logic_vector(6 downto 0));
@@ -49,7 +49,6 @@ architecture Behavioral of RegFileBasys3Wrappper is
     signal RF_WD    : std_logic_vector(15 downto 0);
     signal U_ID     : std_logic_vector(15 downto 0);
     signal COUNT    : std_logic_vector(15 downto 0);
-    signal SWITCHES : std_logic_vector(15 downto 0);
     
     TYPE STATE_TYPE IS (enterAdr,enterData,enterKey,enterSwitching);
     SIGNAL state   : STATE_TYPE := enterAdr;
@@ -116,6 +115,5 @@ begin
             VALID    => '1',
             DISP_EN  => DISP_EN,
             SEGMENTS => SEGMENTS);
-            SWITCHES <= SWITCHE when (BTNR='0') else x"001F";
     
 end Behavioral;
