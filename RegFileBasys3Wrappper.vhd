@@ -53,6 +53,13 @@ architecture Behavioral of RegFileBasys3Wrappper is
     
     TYPE STATE_TYPE IS (enterAdr,enterData,enterKey);
     SIGNAL state   : STATE_TYPE := enterAdr;
+    
+    attribute MARK_DEBUG : string;
+    attribute MARK_DEBUG of RF_WA: signal is "TRUE";
+    attribute MARK_DEBUG of RF_WD: signal is "TRUE";
+    attribute MARK_DEBUG of U_ID: signal is "TRUE";
+    attribute MARK_DEBUG of state: signal is "TRUE";
+    attribute MARK_DEBUG of SWITCHES: signal is "TRUE";
 
 begin
 
